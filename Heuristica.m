@@ -51,3 +51,10 @@ end
 
 % Correr o algoritmo de novo com os novos dados.
 [sol2NodosPartida, sol2NodosDestino, sol2Distancias] = Algoritmo(novoNodosPartida, novoNodosDestino, novoDistancias, A, Z);
+
+g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
+h = plot(g);
+
+highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', 'k', 'LineWidth', 2, 'MarkerSize', 6, 'NodeColor', 'k');
+highlight(h, solNodosPartida, solNodosDestino, 'EdgeColor', 'b', 'LineWidth', 2, 'MarkerSize', 6);
+highlight(h, sol2NodosPartida, sol2NodosDestino, 'EdgeColor', 'r', 'LineWidth', 2, 'MarkerSize', 6);

@@ -20,8 +20,9 @@ nodosDestino = [nodosDestinoRaw; new_nodes(:,2)];
 % Fazer o mesmo para as distâncias, mas simplesmente duplicá-las.
 distancias = [distanciasRaw; distanciasRaw];
 
+tic;
 % Encontrar o caminho mais curto.
-[solNodosPartida, solNodosDestino, solDistancias] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z);
+[solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z);
 
 % Alterar o valor: transformar cada aresta num arco (orientação única
 % direcionada à origem).
@@ -50,7 +51,10 @@ for i = 1:length(solNodosPartida)
 end
 
 % Correr o algoritmo de novo com os novos dados.
-[sol2NodosPartida, sol2NodosDestino, sol2Distancias] = Algoritmo(novoNodosPartida, novoNodosDestino, novoDistancias, A, Z);
+[sol2NodosPartida, sol2NodosDestino] = Algoritmo(novoNodosPartida, novoNodosDestino, novoDistancias, A, Z);
+
+ms = int2str(round(toc * 1000));
+disp(['Resultado calculado em ' ms ' milisegundos.']);
 
 g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
 h = plot(g);
@@ -58,3 +62,5 @@ h = plot(g);
 highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', 'k', 'LineWidth', 2, 'MarkerSize', 6, 'NodeColor', 'k');
 highlight(h, solNodosPartida, solNodosDestino, 'EdgeColor', 'b', 'LineWidth', 2, 'MarkerSize', 6);
 highlight(h, sol2NodosPartida, sol2NodosDestino, 'EdgeColor', 'r', 'LineWidth', 2, 'MarkerSize', 6);
+
+

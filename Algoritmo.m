@@ -1,5 +1,5 @@
 % Corre o algoritmo com os respetivos dados.
-function [solNodosPartida, solNodosDestino, solDistancias] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z)
+function [solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z)
     % Lista única dos nodos de partida e de destino para obter n que é o máximo.
     nodosUnique = unique([nodosPartida, nodosDestino]);
     n = max(nodosUnique);
@@ -61,9 +61,7 @@ function [solNodosPartida, solNodosDestino, solDistancias] = Algoritmo(nodosPart
                     P(i) = j;
                     % Apenas fazer a união de S com i se este ainda não
                     % pertencer a S.
-                    if ~ismember({num2str(i)}, S)
-                        S = union(S, num2str(i));
-                    end
+                    S = union(S, num2str(i));
                 end
             end
         end
@@ -77,16 +75,6 @@ function [solNodosPartida, solNodosDestino, solDistancias] = Algoritmo(nodosPart
         v = P(v);
     end
     caminho = [A caminho];
-    edges = [caminho(1:end-1); caminho(2:end)]';
     solNodosPartida = caminho(1:end-1)';
     solNodosDestino = caminho(2:end)';
-
-    % Definir distâncias
-    solDistancias = zeros(size(edges, 1), 1);
-    for i = 1:size(edges, 1)
-        nodo1 = edges(i, 1);
-        nodo2 = edges(i, 2);
-        iDistancia = nodosPartida == nodo1 & nodosDestino == nodo2;
-        solDistancias(i) = distancias(iDistancia);
-    end
 end

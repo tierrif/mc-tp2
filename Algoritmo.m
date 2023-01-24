@@ -1,5 +1,5 @@
 % Corre o algoritmo com os respetivos dados.
-function [solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z)
+function [solNodosPartida, solNodosDestino, success] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z)
     % Lista única dos nodos de partida e de destino para obter n que é o máximo.
     nodosUnique = unique([nodosPartida, nodosDestino]);
     n = max(nodosUnique);
@@ -28,7 +28,6 @@ function [solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDesti
         end
     end
 
-
     j = -1;
     % Entrar em ciclo até j (o vértice com distância mínima atual) for Z (o destino).
     while j ~= Z
@@ -46,6 +45,10 @@ function [solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDesti
 
         % Remover o vértice de distância mínima atual de S, uma vez que já foi
         % processado.
+        if (min_dist == inf)
+            disp(['Este grafo não tem caminho de ' int2str(A) ' a ' int2str(Z)]);
+            break;
+        end
         S(strcmp(S, num2str(j))) = [];
 
         for i = 1:n
@@ -57,7 +60,7 @@ function [solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDesti
                 % Verificar se a soma de d(j) + l(j,i) é menor que d(i).
                 if (d(j) + distancias(row)) < d(i)
                     % Se sim, aplicar a soma a d(i).
-                    d(i) = d(j) + distancias(row);
+                    d(i) = d(j) + distancias(row(1));
                     P(i) = j;
                     % Apenas fazer a união de S com i se este ainda não
                     % pertencer a S.
@@ -70,11 +73,15 @@ function [solNodosPartida, solNodosDestino] = Algoritmo(nodosPartida, nodosDesti
     % Converter P a grafo em lista (edges)
     caminho = [];
     v = Z;
-    while v ~= A
+    while v ~= A && length(P) >= v && v > 0
         caminho = [v caminho];
         v = P(v);
     end
     caminho = [A caminho];
     solNodosPartida = caminho(1:end-1)';
     solNodosDestino = caminho(2:end)';
+    success = true;
+    if length(P) < v || v <= 0
+       success = false; 
+    end
 end

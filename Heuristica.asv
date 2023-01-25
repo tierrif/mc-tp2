@@ -59,7 +59,7 @@ for j = 1:k
             distancias(index) = -1;
         end
     else
-        fprintf(['Só foram encontrados ' num2str(j - 1) ' caminhos.']);
+        disp(['Só foram encontrados ' int2str((j - 1)) ' caminhos.']);
         break;
     end
 end
@@ -69,9 +69,7 @@ disp(['Resultado calculado em ' ms ' milisegundos.']);
 
 cla reset;
 
-tmp1 = plot([NaN NaN], [NaN NaN], 'Color', '#ff0000');
-hold on;
-tmp2 = plot([NaN NaN], [NaN NaN], 'Color', '#42eb00');
+tmp1 = plot([NaN NaN], [NaN NaN], 'Color', '#c20202');
 
 g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
 g.Nodes.Name = (E(:, 4));
@@ -92,8 +90,8 @@ for i = 1:length(caminhosPartida)
         if i == 1
             color = '#c20202';
         end
-        highlight(h, caminhoPartida, caminhoDestino, 'EdgeColor', color, 'LineWidth', 3, 'MarkerSize', 6);
+        highlight(h, caminhoPartida, caminhoDestino, 'LineWidth', 3, 'MarkerSize', 6);
     end
 end
 
-legend('Caminho Mais Curto', 'Outros caminhos');
+legend('Caminho Mais Curto');

@@ -69,9 +69,8 @@ disp(['Resultado calculado em ' ms ' milisegundos.']);
 
 cla reset;
 
-tmp1 = plot([NaN NaN], [NaN NaN], 'Color', '#ff0000');
+plot([NaN NaN], [NaN NaN], 'Color', '#c20202', 'LineWidth', 4);
 hold on;
-tmp2 = plot([NaN NaN], [NaN NaN], 'Color', '#42eb00');
 
 g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
 g.Nodes.Name = (E(:, 4));
@@ -82,18 +81,21 @@ h = plot(g, 'XData', xData, 'YData', yData);
 highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', '#b0b0b0', 'LineWidth', 1, 'MarkerSize', 6, 'NodeColor', '#777777');
 highlight(h, A, 'NodeColor', '#ffaa00');
 highlight(h, Z, 'NodeColor', '#005396');
+colors = rand([100 3]);
 
 for i = 1:length(caminhosPartida)
     caminhoPartida = cell2mat(caminhosPartida(i));
     caminhoDestino = cell2mat(caminhosDestino(i));
     
     if ~isempty(caminhoPartida)
-        color = '#0a9400';
         if i == 1
-            color = '#c20202';
+            highlight(h, caminhoPartida, caminhoDestino, 'EdgeColor', '#c20202', 'LineWidth', 4, 'MarkerSize', 6);
+        else
+            randomIndex = randi(length(colors), 1);
+            color = colors(randomIndex, :);
+            highlight(h, caminhoPartida, caminhoDestino, 'EdgeColor', color, 'LineWidth', 2, 'MarkerSize', 6);
         end
-        highlight(h, caminhoPartida, caminhoDestino, 'EdgeColor', color, 'LineWidth', 3, 'MarkerSize', 6);
     end
 end
 
-legend('Caminho Mais Curto', 'Outros caminhos');
+legend('Caminho Mais Curto');

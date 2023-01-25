@@ -27,58 +27,73 @@ nodosDestino = [nodosDestinoRaw; new_nodes(:,2)];
 % Fazer o mesmo para as distâncias, mas simplesmente duplicá-las.
 distancias = [distanciasRaw; distanciasRaw];
 
+k = input('Insira um valor de k (número de caminhos): ');
 tic;
-% Encontrar o caminho mais curto.
-[solNodosPartida, solNodosDestino, success] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z);
+caminhosPartida = [];
+caminhosDestino = [];
+for j = 1:k
+    % Encontrar o caminho mais curto.
+    [solNodosPartida, solNodosDestino, success] = Algoritmo(nodosPartida, nodosDestino, distancias, A, Z);
 
-if success
-    % Alterar o valor: transformar cada aresta num arco (orientação única
-    % direcionada à origem).
+    if success
+        caminhosPartida = [caminhosPartida; {solNodosPartida}];
+        caminhosDestino = [caminhosDestino; {solNodosDestino}];
+        % Alterar o valor: transformar cada aresta num arco (orientação única
+        % direcionada à origem).
 
-    % Criar cópia das listas originais
-    novoNodosPartida = nodosPartida(:);
-    novoNodosDestino = nodosDestino(:);
-    novoDistancias = distancias(:);
+        % Iterar todos os nodos do caminho mais curto.
+        for i = 1:length(solNodosPartida)
+            % Encontrar índice atual se aplicável.
+            index = find(nodosPartida == solNodosPartida(i) & nodosDestino == solNodosDestino(i));
 
-    % Iterar todos os nodos do caminho mais curto.
-    for i = 1:length(solNodosPartida)
-        % Encontrar índice atual se aplicável.
-        index = find(novoNodosPartida == solNodosPartida(i) & novoNodosDestino == solNodosDestino(i));
+            % Remove arco se existe.
+            nodosPartida(index) = [];
+            nodosDestino(index) = [];
+            distancias(index) = [];
+        end
 
-        % Remove arco se existe.
-        novoNodosPartida(index) = [];
-        novoNodosDestino(index) = [];
-        novoDistancias(index) = [];
-    end
+        for i = 1:length(solNodosPartida)
+            % Encontrar índice do arco para a direção oposta.
+            index = find(nodosPartida == solNodosDestino(i) & nodosDestino == solNodosPartida(i));
 
-    for i = 1:length(solNodosPartida)
-        % Encontrar índice do arco para a direção oposta.
-        index = find(novoNodosPartida == solNodosDestino(i) & novoNodosDestino == solNodosPartida(i));
-
-        novoDistancias(index) = -1;
-    end
-
-    % Correr o algoritmo de novo com os novos dados.
-    [sol2NodosPartida, sol2NodosDestino, success2] = Algoritmo(novoNodosPartida, novoNodosDestino, novoDistancias, A, Z);
-    
-    if success2
-        ms = int2str(round(toc * 1000));
-        disp(['Resultado calculado em ' ms ' milisegundos.']);
-        
-        cla reset;
-        
-        tmp1 = plot([NaN NaN], [NaN NaN], 'Color', '#ff0000');
-        hold on;
-        tmp2 = plot([NaN NaN], [NaN NaN], 'Color', '#42eb00');
-
-        g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
-        disp(cell2num(E(:, 2)));
-        h = plot(g);
-
-        highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', '#b0b0b0', 'LineWidth', 1, 'MarkerSize', 6, 'NodeColor', '#777777');
-        highlight(h, solNodosPartida, solNodosDestino, 'EdgeColor', '#ff0000', 'LineWidth', 3, 'MarkerSize', 6);
-        highlight(h, sol2NodosPartida, sol2NodosDestino, 'EdgeColor', '#42eb00', 'LineWidth', 3, 'MarkerSize', 6);
-        
-        legend('Caminho Mais Curto', 'Segundo Caminho');
+            distancias(index) = -1;
+        end
+    else
+        fprintf(['Só foram encontrados ' num2str(j - 1) ' caminhos.']);
+        break;
     end
 end
+
+ms = int2str(round(toc * 1000));
+disp(['Resultado calculado em ' ms ' milisegundos.']);
+
+cla reset;
+
+tmp1 = plot([NaN NaN], [NaN NaN], 'Color', '#ff0000');
+hold on;
+tmp2 = plot([NaN NaN], [NaN NaN], 'Color', '#42eb00');
+
+g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
+g.Nodes.Name = (E(:, 4));
+xData = cell2mat(E(:, 2));
+yData = cell2mat(E(:, 3));
+h = plot(g, 'XData', xData, 'YData', yData);
+
+highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', '#b0b0b0', 'LineWidth', 1, 'MarkerSize', 6, 'NodeColor', '#777777');
+highlight(h, A, 'NodeColor', '#ffaa00');
+highlight(h, Z, 'NodeColor', '#005396');
+
+for i = 1:length(caminhosPartida)
+    caminhoPartida = cell2mat(caminhosPartida(i));
+    caminhoDestino = cell2mat(caminhosDestino(i));
+    
+    if ~isempty(caminhoPartida)
+        color = '#0a9400';
+        if i == 1
+            color = '#c20202';
+        end
+        highlight(h, caminhoPartida, caminhoDestino, 'EdgeColor', color, 'LineWidth', 3, 'MarkerSize', 6);
+    end
+end
+
+legend('Caminho Mais Curto', 'Outros caminhos');

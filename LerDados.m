@@ -29,7 +29,15 @@ ficheiro = input('Nome do ficheiro com os dados :', 's');
 
 try
    mat = load(ficheiro, 'Dados'); % devolve matriz numa struct
-   M = mat.Dados;
+   M = mat.Dados.data;
+   try
+       mat = load(ficheiro, 'Extras');
+       E = table2cell(mat.Extras);
+       fprintf('Ficheiro com extras.\n');
+   catch e
+       fprintf('Ficheiro sem extras.\n');
+       fprintf(getReport(e));
+   end
    fprintf('Ficheiro lido com sucesso.\n');
 catch error
    fprintf('Erro ao ler ficheiro: %s\n',ficheiro);

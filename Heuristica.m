@@ -67,16 +67,20 @@ if success
         
         cla reset;
         
-        plot([NaN NaN], [NaN NaN], '-');
+        tmp1 = plot([NaN NaN], [NaN NaN], 'Color', '#ff0000');
         hold on;
-        plot([NaN NaN], [NaN NaN], 'r-');
+        tmp2 = plot([NaN NaN], [NaN NaN], 'Color', '#42eb00');
 
         g = graph(nodosPartidaRaw, nodosDestinoRaw, distanciasRaw);
-        h = plot(g);
+        disp((E(:, 4)));
+        g.Nodes.Name = (E(:, 4));
+        xData = cell2mat(E(:, 2));
+        yData = cell2mat(E(:, 3));
+        h = plot(g, 'XData', xData, 'YData', yData);
 
-        highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', 'k', 'LineWidth', 2, 'MarkerSize', 6, 'NodeColor', 'k');
-        highlight(h, solNodosPartida, solNodosDestino, 'EdgeColor', 'b', 'LineWidth', 2, 'MarkerSize', 6);
-        highlight(h, sol2NodosPartida, sol2NodosDestino, 'EdgeColor', 'r', 'LineWidth', 2, 'MarkerSize', 6);
+        highlight(h, nodosPartidaRaw, nodosDestinoRaw, 'EdgeColor', '#b0b0b0', 'LineWidth', 1, 'MarkerSize', 6, 'NodeColor', '#777777');
+        highlight(h, solNodosPartida, solNodosDestino, 'EdgeColor', '#ff0000', 'LineWidth', 3, 'MarkerSize', 6);
+        highlight(h, sol2NodosPartida, sol2NodosDestino, 'EdgeColor', '#42eb00', 'LineWidth', 3, 'MarkerSize', 6);
         
         legend('Caminho Mais Curto', 'Segundo Caminho');
     end

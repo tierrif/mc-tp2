@@ -46,8 +46,10 @@ function [solNodosPartida, solNodosDestino, success] = Algoritmo(nodosPartida, n
         % Remover o vértice de distância mínima atual de S, uma vez que já foi
         % processado.
         if (min_dist == inf)
-            disp(['Este grafo não tem caminho de ' int2str(A) ' a ' int2str(Z)]);
-            break;
+            solNodosPartida = [];
+            solNodosDestino = [];
+            success = false;
+            return
         end
         S(strcmp(S, num2str(j))) = [];
 
@@ -81,7 +83,4 @@ function [solNodosPartida, solNodosDestino, success] = Algoritmo(nodosPartida, n
     solNodosPartida = caminho(1:end-1)';
     solNodosDestino = caminho(2:end)';
     success = true;
-    if length(P) < v || v <= 0
-       success = false; 
-    end
 end

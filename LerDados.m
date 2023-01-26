@@ -35,6 +35,7 @@ try
        E = table2cell(mat.Extras);
        fprintf('Ficheiro com extras.\n');
    catch e
+       E = {};
        fprintf('Ficheiro sem extras.\n');
        fprintf(getReport(e));
    end

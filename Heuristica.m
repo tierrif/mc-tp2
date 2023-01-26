@@ -78,7 +78,7 @@ for j = 1:k
     end
 end
 
-% Implementação do algoritmo to anexo 1.
+% Implementação do algoritmo do anexo 1.
 if length(caminhosDestino) == 2
     % Inicialização das variáveis.
     Li = [];

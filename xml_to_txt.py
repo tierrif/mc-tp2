@@ -24,3 +24,4 @@ with open('cities.txt', 'w') as f:
   f.write('id\tx\ty\tname\n')
   for city in newCities:
     f.write(str(city[0]) + '\t' + city[1] + '\t' + city[2] + '\t' + city[3] + '\n')
+
